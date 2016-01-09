@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Stage : MonoBehaviour {
-	public int Size { get; set; }
+	public int Size { get; private set; }
 	private Block[] World { get; set; }
 
 	public Stage(int size)
@@ -21,25 +21,25 @@ public class Stage : MonoBehaviour {
 		Vertical
 	};
 
-	private delegate Block getter_type(int pos);
+	private delegate Block getter_type(uint pos);
 
 	public void ApplyRibbon(Direction direction, uint pos, Ribbon ribbon)
 	{
 		getter_type getter;
 		if (direction == Direction.Horizontal)
 		{
-			getter = (int p) => {
+			getter = (uint p) => {
 				return this.block(p, pos);
 			};
 		}
 		else
 		{
-			getter = (int p) => {
+			getter = (uint p) => {
 				return this.block(pos, p);
 			};
 		}
 
-		for (int i = 0; i < Size; ++i)
+		for (uint i = 0; i < Size; ++i)
 		{
 			getter(i).ApplyRibbon(ribbon);
 		}

@@ -6,7 +6,8 @@ using System.Collections;
 /// </summary>
 public class Block : MonoBehaviour
 {
-	public Color color { get; private set; }
+	private Color _color;
+	public Color color { get { return _color; } private set { _color = value; } }
 
 	public Block()
 	{
@@ -15,7 +16,7 @@ public class Block : MonoBehaviour
 
 	public void ApplyRibbon(Ribbon ribbon)
 	{
-		ribbon.ApplyColor(this.color);
+		ribbon.ApplyColor(ref this._color);
 	}
 
 	// Use this for initialization
