@@ -6,17 +6,16 @@ using System.Collections;
 /// </summary>
 public class Block : MonoBehaviour
 {
-	private Color _color;
-	public Color color { get { return _color; } private set { _color = value; } }
+	public Color color { get; private set; }
 
 	public Block()
 	{
 		color = Color.black;
 	}
 
-	public void ApplyRibbon(Ribbon ribbon)
+	public void ApplyRibbon(ref Ribbon ribbon)
 	{
-		ribbon.ApplyColor(ref this._color);
+		ribbon.ApplyColor(this.color);
 	}
 
 	// Use this for initialization

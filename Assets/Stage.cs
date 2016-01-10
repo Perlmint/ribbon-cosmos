@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Stage : MonoBehaviour {
-	public int Size { get; private set; }
+	public int Size { get; set; }
 	private Block[] World { get; set; }
 
 	public Stage(int size)
@@ -11,49 +11,53 @@ public class Stage : MonoBehaviour {
 		World = new Block[size * size];
 	}
 
-	public Block block(uint x, uint y)
+	public Block block(int x, int y)
 	{
 		return World[y * Size + x];
 	}
 
-	public enum Direction {
+	public enum Direction
+	{
 		Horizontal,
 		Vertical
 	};
 
-	private delegate Block getter_type(uint pos);
+	private delegate Block getter_type(int pos);
 
-	public void ApplyRibbon(Direction direction, uint pos, Ribbon ribbon)
+	public void ApplyRibbon(Direction direction, int pos, ref Ribbon ribbon)
 	{
 		getter_type getter;
 		if (direction == Direction.Horizontal)
 		{
-			getter = (uint p) => {
+			getter = (int p) => {
 				return this.block(p, pos);
 			};
 		}
 		else
 		{
-			getter = (uint p) => {
+			getter = (int p) => {
 				return this.block(pos, p);
 			};
 		}
 
-		for (uint i = 0; i < Size; ++i)
+		for (int i = 0; i < Size; ++i)
 		{
-			getter(i).ApplyRibbon(ribbon);
+			getter(i).ApplyRibbon(ref ribbon);
 		}
 	}
 
+	public Stage stage1;
+
 	// Use this for initialization
-	void Start ()
+	void Start()
 	{
-	
+		stage1 = new Stage(this.gameObject.GetComponent<MakeStage>().size);
+		Debug.Log(stage1.Size);
 	}
-	
+
 	// Update is called once per frame
-	void Update ()
+	void Update()
 	{
-	
+
 	}
 }
