@@ -6,28 +6,24 @@ using System.Collections;
 /// </summary>
 public class Block : MonoBehaviour
 {
-	public Color color { get; private set; }
+	private Color _color;
+
+	public Color color {
+		get { return _color; }
+		private set {
+			_color = value;
+			GetComponent<Renderer>().material.color = _color;
+		}
+	}
 
 	public Block()
 	{
 		color = Color.black;
 	}
 
-	public void ApplyRibbon(ref Ribbon ribbon)
+	public void ApplyRibbon(Ribbon ribbon)
 	{
 		ribbon.ApplyColor(this.color);
-	}
-
-	// Use this for initialization
-	void Start ()
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
 	}
 }
 

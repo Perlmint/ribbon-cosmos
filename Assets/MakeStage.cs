@@ -40,6 +40,6 @@ public class MakeStage : MonoBehaviour {
 		Ribbon temp;
 		temp = new Ribbon(Color.red, 1, Ribbon.RibbonType.Additive);
 
-		curStage.ApplyRibbon (Stage.Direction.Horizontal, 1, ref temp);
+		curStage.ApplyRibbon (Stage.Direction.Horizontal, 1, temp);
 	}
 }

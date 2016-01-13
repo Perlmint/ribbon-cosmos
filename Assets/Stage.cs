@@ -3,13 +3,8 @@ using System.Collections;
 
 public class Stage : MonoBehaviour {
 	public int Size { get; set; }
-	private Block[] World { get; set; }
 
-	public Stage(int size)
-	{
-		Size = size;
-		World = new Block[size * size];
-	}
+	private Block[] World { get; set; }
 
 	public Block block(int x, int y)
 	{
@@ -19,12 +14,13 @@ public class Stage : MonoBehaviour {
 	public enum Direction
 	{
 		Horizontal,
-		Vertical
-	};
+		Vertical}
+
+	;
 
 	private delegate Block getter_type(int pos);
 
-	public void ApplyRibbon(Direction direction, int pos, ref Ribbon ribbon)
+	public void ApplyRibbon(Direction direction, int pos, Ribbon ribbon)
 	{
 		getter_type getter;
 		if (direction == Direction.Horizontal)
@@ -42,22 +38,14 @@ public class Stage : MonoBehaviour {
 
 		for (int i = 0; i < Size; ++i)
 		{
-			getter(i).ApplyRibbon(ref ribbon);
+			getter(i).ApplyRibbon(ribbon);
 		}
 	}
 
-	public Stage stage1;
-
-	// Use this for initialization
 	void Start()
 	{
-		stage1 = new Stage(this.gameObject.GetComponent<MakeStage>().size);
-		Debug.Log(stage1.Size);
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
+		Size = GameObject.Find("GameManager").GetComponent<MakeStage>().size;
+		int size = Size;
+		World = new Block[size * size];
 	}
 }
