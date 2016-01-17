@@ -12,7 +12,7 @@ public static class StageUtils
 		/// </summary>
 		public static void SaveStageOnScene()
 	{
-		Stage stage = findStageOnScene();
+		Field stage = findStageOnScene();
 
 		if (stage != null)
 		{
@@ -31,16 +31,16 @@ public static class StageUtils
 	/// Finds the game stage on scene.
 	/// </summary>
 	/// <returns>The game stage on scene.</returns>
-	private static Stage findStageOnScene()
+	private static Field findStageOnScene()
 	{
-		Stage stage = GameObject.FindObjectOfType<Stage>();
+		Field stage = GameObject.FindObjectOfType<Field>();
 
 		return stage;
 	}
 
-	public static void SaveStage(Stage stage, string path)
+	public static void SaveStage(Field stage, string path)
 	{
-		XmlSerializer serializer = new XmlSerializer(typeof(Stage));
+		XmlSerializer serializer = new XmlSerializer(typeof(Field));
 
 		using (var stream = new FileStream(path, FileMode.Create))
 		{

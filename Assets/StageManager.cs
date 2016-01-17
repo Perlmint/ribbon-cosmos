@@ -1,14 +1,14 @@
 using UnityEngine;
 using System.Collections;
 
-public class MakeStage : MonoBehaviour
+public class StageManager : MonoBehaviour
 {
-	protected Stage curStage;
+	protected Field currentField;
 	public int size;
 
 	void Start () {
-		curStage = GameObject.FindObjectOfType<Stage>();
-		curStage.Size = size;
+		currentField = GameObject.FindObjectOfType<Field>();
+		currentField.Size = size;
 	}
 
 	void Update () {
@@ -20,6 +20,6 @@ public class MakeStage : MonoBehaviour
 		Ribbon temp;
 		temp = new Ribbon(Color.red, 1, Ribbon.RibbonType.Additive);
 
-		curStage.ApplyRibbon(Stage.Direction.Horizontal, 1, temp);
+		currentField.ApplyRibbon(Field.Direction.Horizontal, 1, temp);
 	}
 }

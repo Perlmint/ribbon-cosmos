@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Xml.Serialization;
 
-public class Stage : MonoBehaviour, IXmlSerializable
+public class Field : MonoBehaviour, IXmlSerializable
 {
 	public GameObject blockProto;
 	private int size;
