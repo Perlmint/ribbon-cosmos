@@ -53,6 +53,19 @@ public class Stage : MonoBehaviour, IXmlSerializable
 		Size = int.Parse(reader.GetAttribute("size"));
 		reader.ReadToFollowing("BaseField");
 		field.ReadXml(reader);
+		reader.ReadToFollowing("ObjectiveField");
+		for (int x = 0; x < size; x++)
+		{
+			reader.ReadToFollowing("Row");
+			for (int y = 0; y < size; y++)
+			{
+				reader.ReadToFollowing("Block");
+				objectiveColors[y * size + x] = new Color(
+					float.Parse(reader.GetAttribute("r")),
+					float.Parse(reader.GetAttribute("g")),
+					float.Parse(reader.GetAttribute("b")));
+			}
+		}
 		reader.ReadToFollowing("Ribbons");
 		int ribbonCount = int.Parse(reader.GetAttribute("count"));
 		for (int i = 0; i < ribbonCount; i++)
@@ -70,6 +83,20 @@ public class Stage : MonoBehaviour, IXmlSerializable
 		field.WriteXml(writer);
 		writer.WriteEndElement();
 		writer.WriteStartElement("ObjectiveField");
+		for (int x = 0; x < size; x++)
+		{
+			writer.WriteStartElement("Row");
+			for (int y = 0; y < size; y++)
+			{
+				writer.WriteStartElement("Block");
+				var color = objectiveColors[y * size + x];
+				writer.WriteAttributeString("r", color.r.ToString());
+				writer.WriteAttributeString("g", color.g.ToString());
+				writer.WriteAttributeString("b", color.b.ToString());
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();
+		}
 		writer.WriteEndElement();
 		writer.WriteStartElement("Ribbons");
 		writer.WriteAttributeString("count", ribbons.Count.ToString());
