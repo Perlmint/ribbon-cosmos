@@ -33,9 +33,11 @@ public class StageManager : MonoBehaviour
 
 	public Ribbon newRibbon()
 	{
+		var height = UiBottom.transform.GetComponent<RectTransform>().rect.size.y;
+		var width = ribbonProto.GetComponent<Renderer>().bounds.size.x;
 		GameObject ribbonObject = 
 			Instantiate(ribbonProto,
-				new Vector3(ribbons.Count * 270, 0, 0),
+				new Vector3(ribbons.Count * 270 + width / 2 + 20, height / 2, 0),
 				UiBottom.transform.rotation) as GameObject;
 
 		ribbonObject.transform.parent = UiBottom.transform;
