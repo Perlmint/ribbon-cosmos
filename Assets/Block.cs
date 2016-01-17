@@ -7,7 +7,14 @@ using System.Collections;
 public class Block : MonoBehaviour
 {
 	private Color _color;
-	public Color color { get { return _color; } private set { _color = value; } }
+
+	public Color color {
+		get { return _color; }
+		private set {
+			_color = value;
+			GetComponent<Renderer>().material.color = _color;
+		}
+	}
 
 	public Block()
 	{
@@ -16,19 +23,7 @@ public class Block : MonoBehaviour
 
 	public void ApplyRibbon(Ribbon ribbon)
 	{
-		ribbon.ApplyColor(ref this._color);
-	}
-
-	// Use this for initialization
-	void Start ()
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
+		ribbon.ApplyColor(this.color);
 	}
 }
 

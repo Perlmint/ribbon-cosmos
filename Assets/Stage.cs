@@ -2,58 +2,50 @@
 using System.Collections;
 
 public class Stage : MonoBehaviour {
-	public int Size { get; private set; }
+	public int Size { get; set; }
+
 	private Block[] World { get; set; }
 
-	public Stage(int size)
-	{
-		Size = size;
-		World = new Block[size * size];
-	}
-
-	public Block block(uint x, uint y)
+	public Block block(int x, int y)
 	{
 		return World[y * Size + x];
 	}
 
-	public enum Direction {
+	public enum Direction
+	{
 		Horizontal,
-		Vertical
-	};
+		Vertical}
 
-	private delegate Block getter_type(uint pos);
+	;
 
-	public void ApplyRibbon(Direction direction, uint pos, Ribbon ribbon)
+	private delegate Block getter_type(int pos);
+
+	public void ApplyRibbon(Direction direction, int pos, Ribbon ribbon)
 	{
 		getter_type getter;
 		if (direction == Direction.Horizontal)
 		{
-			getter = (uint p) => {
+			getter = (int p) => {
 				return this.block(p, pos);
 			};
 		}
 		else
 		{
-			getter = (uint p) => {
+			getter = (int p) => {
 				return this.block(pos, p);
 			};
 		}
 
-		for (uint i = 0; i < Size; ++i)
+		for (int i = 0; i < Size; ++i)
 		{
 			getter(i).ApplyRibbon(ribbon);
 		}
 	}
 
-	// Use this for initialization
-	void Start ()
+	void Start()
 	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
+		Size = GameObject.Find("GameManager").GetComponent<MakeStage>().size;
+		int size = Size;
+		World = new Block[size * size];
 	}
 }
