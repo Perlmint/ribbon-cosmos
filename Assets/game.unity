@@ -415,6 +415,7 @@ MonoBehaviour:
   Field: {fileID: 477075558}
   stage: {fileID: 1893953581}
   size: 3
+  padding: .200000003
   StageData: {fileID: 0}
   UiTop: {fileID: 123035338}
   UiBottom: {fileID: 888940348}

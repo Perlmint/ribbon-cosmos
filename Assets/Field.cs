@@ -23,6 +23,12 @@ public class Field : MonoBehaviour, IXmlSerializable
 				return;
 			}
 
+			if (size == 0)
+			{
+				World = new Block[0];
+				return;
+			}
+
 			foreach (GameObject obj in blockObjs)
 			{
 				Destroy(obj);
@@ -30,19 +36,21 @@ public class Field : MonoBehaviour, IXmlSerializable
 			var fieldBound = GetComponent<Renderer>().bounds;
 			var fieldSize = fieldBound.size;
 			var fieldCenter = fieldBound.center;
-			float width = fieldSize.x, height = fieldSize.y;
-			float deltaX = width / size, deltaY = height / size;
-			float beginX = fieldCenter.x - width / 2, beginY = fieldCenter.y - height / 2;
-
 			var blockSize = blockProto.GetComponent<Renderer>().bounds.size;
+			float padding = 1.0f - StageManager.Current.padding;
+			Vector3 blockScale = new Vector3(1.0f / size * padding, 1.0f / size * padding, 1.0f);
+			Vector3 blockPositionUnit = new Vector3(1.0f / size, 1.0f / size, 1);
+
 			World = new Block[size * size];
 			for (int x = 0; x < size; x++) {
 				for (int y = 0; y < size; y++) {
 					GameObject curBlock;
-					curBlock = Instantiate (blockProto,
-						new Vector3(beginX + deltaX * x + blockSize.x / 2, beginY + deltaY* y + blockSize.y / 2, 0.0f), 
-						this.transform.rotation) as GameObject;
+					curBlock = Instantiate(blockProto) as GameObject;
 					curBlock.transform.parent = this.transform;
+					var position = new Vector3(x - ((size - 1) / 2), y - ((size - 1) / 2), -1);
+					position.Scale(blockPositionUnit);
+					curBlock.transform.localPosition = position;
+					curBlock.transform.localScale = blockScale;
 					setBlock(x, y, curBlock.GetComponent<Block>());
 					blockObjs.Add(curBlock);
 				}

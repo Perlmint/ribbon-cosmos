@@ -23,6 +23,7 @@ public class StageManager : MonoBehaviour
 	public Field Field;
 	public Stage stage;
 	public int size;
+	public float padding;
 
 	public TextAsset StageData;
 
