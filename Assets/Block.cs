@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 /// <summary>
 /// Block on stage. default color is black.
@@ -10,9 +11,7 @@ public class Block : MonoBehaviour
 
 	public Color color {
 		get { return _color; }
-		private set {
-			_color = value;
-		}
+		set { _color = value; }
 	}
 
 	public Block()
@@ -31,3 +30,13 @@ public class Block : MonoBehaviour
 	}
 }
 
+[CustomEditor(typeof(Block))]
+public class BlockEditor : Editor
+{
+	public override void OnInspectorGUI()
+	{
+		Block block = (Block)target;
+
+		block.color = EditorGUILayout.ColorField("Color", block.color);
+	}
+}
