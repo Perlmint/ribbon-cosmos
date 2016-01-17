@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Xml.Serialization;
 
-public class Stage : MonoBehaviour {
+public class Stage : MonoBehaviour, IXmlSerializable
+{
 	public GameObject blockProto;
 	private int size;
 
@@ -84,4 +86,52 @@ public class Stage : MonoBehaviour {
 		// init world;
 		Size = size;
 	}
+
+	#region IXmlSerializable implementation
+
+
+	public System.Xml.Schema.XmlSchema GetSchema()
+	{
+		return null;
+	}
+
+
+	public void ReadXml(System.Xml.XmlReader reader)
+	{
+		Size = int.Parse(reader.GetAttribute("Size"));
+		for (int x = 0; x < size; x++)
+		{
+			reader.ReadStartElement("Row");
+			for (int y = 0; y < size; y++)
+			{
+				var currentBlock = block(x, y);
+				reader.ReadStartElement("Block");
+				currentBlock.ReadXml(reader);
+				reader.ReadEndElement();
+			}
+			reader.ReadEndElement();
+		}
+	}
+
+
+	public void WriteXml(System.Xml.XmlWriter writer)
+	{
+		writer.WriteAttributeString("Size", Size.ToString());
+		for (int x = 0; x < size; x++)
+		{
+			writer.WriteStartElement("Row");
+			for (int y = 0; y < size; y++)
+			{
+				var currentBlock = block(x, y);
+				writer.WriteStartElement("Block");
+				currentBlock.WriteXml(writer);
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();
+		}
+	}
+
+
+	#endregion
+
 }
