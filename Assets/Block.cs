@@ -6,13 +6,12 @@ using System.Collections;
 /// </summary>
 public class Block : MonoBehaviour
 {
-	private Color _color;
+	protected Color _color;
 
 	public Color color {
 		get { return _color; }
 		private set {
 			_color = value;
-			GetComponent<Renderer>().material.color = _color;
 		}
 	}
 
@@ -23,7 +22,12 @@ public class Block : MonoBehaviour
 
 	public void ApplyRibbon(Ribbon ribbon)
 	{
-		ribbon.ApplyColor(this.color);
+		ribbon.ApplyColor(ref this._color);
+	}
+
+	public void Update()
+	{
+		GetComponent<Renderer>().material.color = _color;
 	}
 }
 

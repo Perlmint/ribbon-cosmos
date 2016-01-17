@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Ribbon : MonoBehaviour
+public class Ribbon
 {
 	public Color color { get; private set; }
 	public int width { get; private set; }
@@ -18,7 +18,7 @@ public class Ribbon : MonoBehaviour
 		this.type = ribbonType;
 	}
 
-	public void ApplyColor(Color color)
+	public void ApplyColor(ref Color color)
 	{
 		switch (type) {
 		case RibbonType.Additive:

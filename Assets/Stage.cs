@@ -2,7 +2,40 @@
 using System.Collections;
 
 public class Stage : MonoBehaviour {
-	public int Size { get; set; }
+	public GameObject blockProto;
+	private int size;
+
+	public int Size { 
+		get { return size; }
+		set {
+			size = value;
+			if (size == 0)
+			{
+				World = new Block[0];
+				return;
+			}
+
+			var fieldBound = GetComponent<Renderer>().bounds;
+			var fieldSize = fieldBound.size;
+			var fieldCenter = fieldBound.center;
+			float width = fieldSize.x, height = fieldSize.y;
+			float deltaX = width / size, deltaY = height / size;
+			float beginX = fieldCenter.x - width / 2, beginY = fieldCenter.y - height / 2;
+
+			var blockSize = blockProto.GetComponent<Renderer>().bounds.size;
+			World = new Block[size * size];
+			for (int x = 0; x < size; x++) {
+				for (int y = 0; y < size; y++) {
+					GameObject curBlock;
+					curBlock = Instantiate (blockProto,
+						new Vector3(beginX + deltaX * x + blockSize.x / 2, beginY + deltaY* y + blockSize.y / 2, 0.0f), 
+						this.transform.rotation) as GameObject;
+					curBlock.transform.parent = this.transform;
+					setBlock(x, y, curBlock.GetComponent<Block>());
+				}
+			}
+		}
+	}
 
 	private Block[] World { get; set; }
 
@@ -11,12 +44,16 @@ public class Stage : MonoBehaviour {
 		return World[y * Size + x];
 	}
 
+	public void setBlock(int x, int y, Block block)
+	{
+		World[y * Size + x] = block;
+	}
+
 	public enum Direction
 	{
 		Horizontal,
-		Vertical}
-
-	;
+		Vertical
+	};
 
 	private delegate Block getter_type(int pos);
 
@@ -44,8 +81,7 @@ public class Stage : MonoBehaviour {
 
 	void Start()
 	{
-		Size = GameObject.Find("GameManager").GetComponent<MakeStage>().size;
-		int size = Size;
-		World = new Block[size * size];
+		// init world;
+		Size = size;
 	}
 }
