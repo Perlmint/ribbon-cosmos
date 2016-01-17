@@ -4,7 +4,12 @@ using System.Xml.Serialization;
 
 public class Field : MonoBehaviour, IXmlSerializable
 {
-	public GameObject blockProto;
+	private GameObject _blockProto;
+	private GameObject blockProto {
+		get {
+			return _blockProto ?? (_blockProto = StageManager.Current.blockProto);
+		}
+	}
 	private int size;
 
 	public int Size { 
