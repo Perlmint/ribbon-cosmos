@@ -106,15 +106,13 @@ public class Field : MonoBehaviour, IXmlSerializable
 		Size = int.Parse(reader.GetAttribute("Size"));
 		for (int x = 0; x < size; x++)
 		{
-			reader.ReadStartElement("Row");
+			reader.ReadToFollowing("Row");
 			for (int y = 0; y < size; y++)
 			{
 				var currentBlock = block(x, y);
-				reader.ReadStartElement("Block");
+				reader.ReadToFollowing("Block");
 				currentBlock.ReadXml(reader);
-				reader.ReadEndElement();
 			}
-			reader.ReadEndElement();
 		}
 	}
 

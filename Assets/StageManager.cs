@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using System.Text;
 
 public class StageManager : MonoBehaviour
 {
@@ -20,6 +23,8 @@ public class StageManager : MonoBehaviour
 	public Field Field;
 	public Stage stage;
 	public int size;
+
+	public TextAsset StageData;
 
 	public GameObject UiTop;
 	public GameObject UiBottom;
@@ -43,7 +48,24 @@ public class StageManager : MonoBehaviour
 		stage = GameObject.FindObjectOfType<Stage>();
 		UiTop = GameObject.Find("Top");
 		UiBottom = GameObject.Find("Bottom");
-		stage.Size = size;
+
+		if (StageData == null)
+		{
+			stage.Size = size;
+		}
+		else
+		{
+			string data = StageData.text;
+			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+			{
+				using (var reader = new XmlTextReader(stream))
+				{
+					reader.ReadToFollowing("Stage");
+					Debug.Log(reader.Name);
+					stage.ReadXml(reader);
+				}
+			}
+		}
 	}
 
 	void Update () {

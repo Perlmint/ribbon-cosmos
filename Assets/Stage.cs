@@ -8,7 +8,7 @@ public class Stage : MonoBehaviour, IXmlSerializable
 {
 	public Field field;
 	public Color[] objectiveColors;
-	private List<Ribbon> ribbons;
+	private List<Ribbon> ribbons = new List<Ribbon>();
 	public int size;
 
 	public int Size {
@@ -36,7 +36,9 @@ public class Stage : MonoBehaviour, IXmlSerializable
 
 	public Ribbon AddRibbon()
 	{
-		return StageManager.Current.newRibbon();
+		var ribbon = StageManager.Current.newRibbon();
+		ribbons.Add(ribbon);
+		return ribbon;
 	}
 
 	#region IXmlSerializable implementation
@@ -48,12 +50,36 @@ public class Stage : MonoBehaviour, IXmlSerializable
 
 	public void ReadXml(System.Xml.XmlReader reader)
 	{
-		
+		Size = int.Parse(reader.GetAttribute("size"));
+		reader.ReadToFollowing("BaseField");
+		field.ReadXml(reader);
+		reader.ReadToFollowing("Ribbons");
+		int ribbonCount = int.Parse(reader.GetAttribute("count"));
+		for (int i = 0; i < ribbonCount; i++)
+		{
+			reader.ReadToFollowing("Ribbon");
+			var ribbon = AddRibbon();
+			ribbon.ReadXml(reader);
+		}
 	}
 
 	public void WriteXml(System.Xml.XmlWriter writer)
 	{
-		
+		writer.WriteAttributeString("size", size.ToString());
+		writer.WriteStartElement("BaseField");
+		field.WriteXml(writer);
+		writer.WriteEndElement();
+		writer.WriteStartElement("ObjectiveField");
+		writer.WriteEndElement();
+		writer.WriteStartElement("Ribbons");
+		writer.WriteAttributeString("count", ribbons.Count.ToString());
+		foreach (Ribbon ribbon in ribbons)
+		{
+			writer.WriteStartElement("Ribbon");
+			ribbon.WriteXml(writer);
+			writer.WriteEndElement();
+		}
+		writer.WriteEndElement();
 	}
 
 	#endregion

@@ -3,6 +3,8 @@ using UnityEditor;
 using UnityEngine;
 using System.Xml.Serialization;
 using System.IO;
+using System.Xml;
+using System.Text;
 
 public static class StageUtils
 {
@@ -12,7 +14,7 @@ public static class StageUtils
 		/// </summary>
 		public static void SaveStageOnScene()
 	{
-		Field stage = findStageOnScene();
+		Stage stage = findStageOnScene();
 
 		if (stage != null)
 		{
@@ -31,16 +33,16 @@ public static class StageUtils
 	/// Finds the game stage on scene.
 	/// </summary>
 	/// <returns>The game stage on scene.</returns>
-	private static Field findStageOnScene()
+	private static Stage findStageOnScene()
 	{
-		Field stage = GameObject.FindObjectOfType<Field>();
+		Stage stage = GameObject.FindObjectOfType<Stage>();
 
 		return stage;
 	}
 
-	public static void SaveStage(Field stage, string path)
+	public static void SaveStage(Stage stage, string path)
 	{
-		XmlSerializer serializer = new XmlSerializer(typeof(Field));
+		XmlSerializer serializer = new XmlSerializer(typeof(Stage));
 
 		using (var stream = new FileStream(path, FileMode.Create))
 		{
