@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
 public class Field : MonoBehaviour, IXmlSerializable
 {
@@ -22,6 +23,10 @@ public class Field : MonoBehaviour, IXmlSerializable
 				return;
 			}
 
+			foreach (GameObject obj in blockObjs)
+			{
+				Destroy(obj);
+			}
 			var fieldBound = GetComponent<Renderer>().bounds;
 			var fieldSize = fieldBound.size;
 			var fieldCenter = fieldBound.center;
@@ -39,10 +44,13 @@ public class Field : MonoBehaviour, IXmlSerializable
 						this.transform.rotation) as GameObject;
 					curBlock.transform.parent = this.transform;
 					setBlock(x, y, curBlock.GetComponent<Block>());
+					blockObjs.Add(curBlock);
 				}
 			}
 		}
 	}
+
+	private List<GameObject> blockObjs = new List<GameObject>();
 
 	private Block[] World { get; set; }
 
