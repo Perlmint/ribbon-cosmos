@@ -1,87 +1,131 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+using UnityEditor;
 
-public class Stage : MonoBehaviour {
-	public GameObject blockProto;
-	private int size;
+public class Stage : MonoBehaviour, IXmlSerializable
+{
+	public Field field;
+	public Color[] objectiveColors;
+	private List<Ribbon> ribbons = new List<Ribbon>();
+	public int size;
 
-	public int Size { 
+	public int Size {
 		get { return size; }
 		set {
 			size = value;
-			if (size == 0)
+			field.Size = size;
+			objectiveColors = new Color[size * size];
+			for (int i = size * size; i > 0; i--)
 			{
-				World = new Block[0];
-				return;
-			}
-
-			var fieldBound = GetComponent<Renderer>().bounds;
-			var fieldSize = fieldBound.size;
-			var fieldCenter = fieldBound.center;
-			float width = fieldSize.x, height = fieldSize.y;
-			float deltaX = width / size, deltaY = height / size;
-			float beginX = fieldCenter.x - width / 2, beginY = fieldCenter.y - height / 2;
-
-			var blockSize = blockProto.GetComponent<Renderer>().bounds.size;
-			World = new Block[size * size];
-			for (int x = 0; x < size; x++) {
-				for (int y = 0; y < size; y++) {
-					GameObject curBlock;
-					curBlock = Instantiate (blockProto,
-						new Vector3(beginX + deltaX * x + blockSize.x / 2, beginY + deltaY* y + blockSize.y / 2, 0.0f), 
-						this.transform.rotation) as GameObject;
-					curBlock.transform.parent = this.transform;
-					setBlock(x, y, curBlock.GetComponent<Block>());
-				}
+				objectiveColors[i - 1] = new Color();
 			}
 		}
 	}
 
-	private Block[] World { get; set; }
-
-	public Block block(int x, int y)
+	public void Start()
 	{
-		return World[y * Size + x];
+		field = StageManager.Current.Field;
 	}
 
-	public void setBlock(int x, int y, Block block)
+	public void ApplyRibbon(Field.Direction direction, int pos, Ribbon ribbon)
 	{
-		World[y * Size + x] = block;
+		field.ApplyRibbon(direction, pos, ribbon);
 	}
 
-	public enum Direction
+	public Ribbon AddRibbon()
 	{
-		Horizontal,
-		Vertical
-	};
+		var ribbon = StageManager.Current.newRibbon();
+		ribbons.Add(ribbon);
+		return ribbon;
+	}
 
-	private delegate Block getter_type(int pos);
+	#region IXmlSerializable implementation
 
-	public void ApplyRibbon(Direction direction, int pos, Ribbon ribbon)
+	public System.Xml.Schema.XmlSchema GetSchema()
 	{
-		getter_type getter;
-		if (direction == Direction.Horizontal)
-		{
-			getter = (int p) => {
-				return this.block(p, pos);
-			};
-		}
-		else
-		{
-			getter = (int p) => {
-				return this.block(pos, p);
-			};
-		}
+		return null;
+	}
 
-		for (int i = 0; i < Size; ++i)
+	public void ReadXml(System.Xml.XmlReader reader)
+	{
+		Size = int.Parse(reader.GetAttribute("size"));
+		reader.ReadToFollowing("BaseField");
+		field.ReadXml(reader);
+		reader.ReadToFollowing("ObjectiveField");
+		for (int x = 0; x < size; x++)
 		{
-			getter(i).ApplyRibbon(ribbon);
+			reader.ReadToFollowing("Row");
+			for (int y = 0; y < size; y++)
+			{
+				reader.ReadToFollowing("Block");
+				objectiveColors[y * size + x] = new Color(
+					float.Parse(reader.GetAttribute("r")),
+					float.Parse(reader.GetAttribute("g")),
+					float.Parse(reader.GetAttribute("b")));
+			}
+		}
+		reader.ReadToFollowing("Ribbons");
+		int ribbonCount = int.Parse(reader.GetAttribute("count"));
+		for (int i = 0; i < ribbonCount; i++)
+		{
+			reader.ReadToFollowing("Ribbon");
+			var ribbon = AddRibbon();
+			ribbon.ReadXml(reader);
 		}
 	}
 
-	void Start()
+	public void WriteXml(System.Xml.XmlWriter writer)
 	{
-		// init world;
-		Size = size;
+		writer.WriteAttributeString("size", size.ToString());
+		writer.WriteStartElement("BaseField");
+		field.WriteXml(writer);
+		writer.WriteEndElement();
+		writer.WriteStartElement("ObjectiveField");
+		for (int x = 0; x < size; x++)
+		{
+			writer.WriteStartElement("Row");
+			for (int y = 0; y < size; y++)
+			{
+				writer.WriteStartElement("Block");
+				var color = objectiveColors[y * size + x];
+				writer.WriteAttributeString("r", color.r.ToString());
+				writer.WriteAttributeString("g", color.g.ToString());
+				writer.WriteAttributeString("b", color.b.ToString());
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();
+		}
+		writer.WriteEndElement();
+		writer.WriteStartElement("Ribbons");
+		writer.WriteAttributeString("count", ribbons.Count.ToString());
+		foreach (Ribbon ribbon in ribbons)
+		{
+			writer.WriteStartElement("Ribbon");
+			ribbon.WriteXml(writer);
+			writer.WriteEndElement();
+		}
+		writer.WriteEndElement();
+	}
+
+	#endregion
+
+	[CustomEditor(typeof(Stage))]
+	public class StageEditor : Editor
+	{
+		public override void OnInspectorGUI()
+		{
+			Stage stage = (Stage)target;
+
+			stage.size = EditorGUILayout.IntField("Size", stage.size);
+			EditorGUILayout.LabelField("Ribbons");
+			if (GUILayout.Button("Add"))
+			{
+				stage.AddRibbon();
+			}
+			EditorGUILayout.BeginVertical();
+			EditorGUILayout.EndVertical();
+		}
 	}
 }
