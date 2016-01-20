@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Stage : MonoBehaviour {
 	public GameObject blockProto;
+    public float padding; // 0.0 ~ 1.0  
 	private int size;
 
 	public int Size { 
@@ -24,17 +25,23 @@ public class Stage : MonoBehaviour {
 
 			var blockSize = blockProto.GetComponent<Renderer>().bounds.size;
 			World = new Block[size * size];
+
+            this.transform.localScale += new Vector3(deltaX * padding, deltaY * padding, 0.0f);
 			for (int x = 0; x < size; x++) {
 				for (int y = 0; y < size; y++) {
 					GameObject curBlock;
-					curBlock = Instantiate (blockProto,
-						new Vector3(beginX + deltaX * x + blockSize.x / 2, beginY + deltaY* y + blockSize.y / 2, 0.0f), 
-						this.transform.rotation) as GameObject;
+                    curBlock = Instantiate(blockProto,
+                        new Vector3(beginX + deltaX * (x + 0.5f), beginY + deltaY * (y + 0.5f), 0.0f),
+                        this.transform.rotation) as GameObject;
+                    curBlock.transform.localScale = new Vector3(deltaX * (1.0f - padding), deltaY * (1.0f - padding), 1.0f);
 					curBlock.transform.parent = this.transform;
 					setBlock(x, y, curBlock.GetComponent<Block>());
+                    curBlock.GetComponent<Block>().x = x;
+                    curBlock.GetComponent<Block>().y = y;
 				}
 			}
-		}
+            this.transform.localScale -= new Vector3(deltaX * padding, deltaY * padding, 0.0f);
+        }
 	}
 
 	private Block[] World { get; set; }
@@ -78,6 +85,11 @@ public class Stage : MonoBehaviour {
 			getter(i).ApplyRibbon(ribbon);
 		}
 	}
+
+    void CkeckInput()
+    {
+
+    }
 
 	void Start()
 	{

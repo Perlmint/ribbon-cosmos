@@ -245,6 +245,7 @@ GameObject:
   - 65: {fileID: 477075560}
   - 23: {fileID: 477075559}
   - 114: {fileID: 477075558}
+  - 114: {fileID: 477075562}
   m_Layer: 0
   m_Name: Stage
   m_TagString: Untagged
@@ -276,6 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockProto: {fileID: 195442, guid: 5665c41d744f88047b4189986e153841, type: 2}
+  padding: .100000001
 --- !u!23 &477075559
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -319,6 +321,22 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 477075556}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &477075562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 477075556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 265c82b41a202554ca62fe14d1000bec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startX: -1
+  startY: -1
+  endX: -1
+  endY: -1
+  twoTime: 0
 --- !u!115 &535201923
 MonoScript:
   m_ObjectHideFlags: 0

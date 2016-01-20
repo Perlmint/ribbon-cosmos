@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
 
 /// <summary>
 /// Block on stage. default color is black.
 /// </summary>
 public class Block : MonoBehaviour
 {
+    public int x;
+    public int y;
 	protected Color _color;
 
 	public Color color {
@@ -28,15 +29,12 @@ public class Block : MonoBehaviour
 	{
 		GetComponent<Renderer>().material.color = _color;
 	}
+
+    void OnMouseDown()
+    {
+        gameObject.GetComponentInParent<TouchInput>().startX = x;
+        gameObject.GetComponentInParent<TouchInput>().startY = y;
+    }
 }
 
-[CustomEditor(typeof(Block))]
-public class BlockEditor : Editor
-{
-	public override void OnInspectorGUI()
-	{
-		Block block = (Block)target;
 
-		block.color = EditorGUILayout.ColorField("Color", block.color);
-	}
-}
