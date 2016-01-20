@@ -17,7 +17,7 @@ public class Stage : MonoBehaviour, IXmlSerializable
 			size = value;
 			field.Size = size;
 			objectiveColors = new Color[size * size];
-			for (int i = size * size; i > 0; i--)
+            for (int i = size * size; i > 0; i--)
 			{
 				objectiveColors[i - 1] = new Color();
 			}

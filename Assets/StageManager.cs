@@ -8,6 +8,7 @@ using System.Text;
 public class StageManager : MonoBehaviour
 {
 	public GameObject blockProto;
+    public GameObject blockObjective;
 	public GameObject ribbonProto;
 	private static StageManager _manager;
 	public static StageManager Current {
@@ -46,11 +47,32 @@ public class StageManager : MonoBehaviour
 		return ribbonObject.GetComponent<Ribbon>();
 	}
 
+    void DrawObj()
+    {
+        var edge = UiTop.transform.GetComponent<RectTransform>().rect.size.y;
+        float delta = edge / size;
+
+        for(int y = 0; y < size; y++)
+        {
+            for(int x = 0; x < size; x++)
+            {
+
+                GameObject blockObj =
+                    Instantiate(blockObjective, new Vector3(delta * (x + 0.5f), 1620 + delta * (0.5f + y), -1),
+                    UiTop.transform.rotation) as GameObject;
+                blockObj.GetComponent<Transform>().localScale = new Vector3(delta, delta, 1.0f);
+
+                blockObj.transform.parent = UiTop.transform;
+                blockObj.GetComponent<ObjBlock>().color = stage.objectiveColors[x + size * y];
+            }
+        }
+    }
+
 	void Start () {
 		stage = GameObject.FindObjectOfType<Stage>();
 		UiTop = GameObject.Find("Top");
 		UiBottom = GameObject.Find("Bottom");
-
+        
 		if (StageData == null)
 		{
 			stage.Size = size;
@@ -68,7 +90,9 @@ public class StageManager : MonoBehaviour
 				}
 			}
 		}
-	}
+
+        DrawObj();
+    }
 
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.A))
