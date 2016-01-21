@@ -27,6 +27,7 @@ public class RibbonGameManager : MonoBehaviour {
     private void Initiate()
     {
         RibbonGameStageData curstagedata = RibbonGameStageManager.Instance.GetCurrentStageData();
+        curstagedata.ResetRibbon();
         GoalStageData = curstagedata.GoalData;
         CurData = new RibbonGameData();
         CurData.Init(GoalStageData.Width, GoalStageData.Height);
@@ -76,6 +77,13 @@ public class RibbonGameStageData
     public RibbonGameData GoalData;
     public List<RibbonData> RibbonList = new List<RibbonData>();
 
+    public void ResetRibbon()
+    {
+        for(int iter = 0; iter < RibbonList.Count; iter++)
+        {
+            RibbonList[iter].CurCount = RibbonList[iter].MaxCount;
+        }
+    }
 }
 
 [System.Serializable]
