@@ -29,6 +29,7 @@ public class Field : MonoBehaviour, IXmlSerializable
 				return;
 			}
 
+			// 이전에 생성된 블럭을 전부 제거한다.
 			foreach (GameObject obj in blockObjs)
 			{
 				Destroy(obj);
@@ -38,6 +39,8 @@ public class Field : MonoBehaviour, IXmlSerializable
 			var fieldCenter = fieldBound.center;
 			var blockSize = blockProto.GetComponent<Renderer>().bounds.size;
 			float padding = 1.0f - StageManager.Current.padding;
+			// 어차피 transform.parent를 지정하면 local좌표계가 parent에 상대적인 좌표계가 된다.
+			// 그러니 그냥 0.0f ~ 1.0f을 기준으로 위치 및 스케일을 구하면 된다.
 			Vector3 blockScale = new Vector3(1.0f / size * padding, 1.0f / size * padding, 1.0f);
 			Vector3 blockPositionUnit = new Vector3(1.0f / size, 1.0f / size, 1);
 
