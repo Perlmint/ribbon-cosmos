@@ -1,0 +1,7 @@
+root = ture
+
+[{**/*.cs, *.cs}]
+indent_style = tab
+indent_size = 4
+charset = utf-8-bom
+trim_trailing_whitespace = true
