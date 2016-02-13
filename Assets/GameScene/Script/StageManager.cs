@@ -71,11 +71,18 @@ public class StageManager : MonoBehaviour
 		}
 	}
 
+    
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.A))
-			Temp ();
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Temp();
+            //Debug.Log("A");
+        }
         if (Input.GetKeyDown(KeyCode.S))
-            tempCover();
+        {
+            TempCover();
+            //Debug.Log("S");
+        }
 	}
 
 	void Temp(){
@@ -85,7 +92,7 @@ public class StageManager : MonoBehaviour
 		stage.ApplyRibbon(Field.Direction.Horizontal, 1, temp);
 	}
 
-    void tempCover()
+    void TempCover()
     {
         Ribbon tempCover;
         tempCover = new Ribbon(Color.blue, 1, Ribbon.RibbonType.Covering);
