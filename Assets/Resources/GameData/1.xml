@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Stage size="3">
+  <BaseField Size="3">
+    <Row>
+      <Block r="0.966" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+    </Row>
+    <Row>
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+    </Row>
+    <Row>
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+    </Row>
+  </BaseField>
+  <ObjectiveField>
+    <Row>
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+    </Row>
+    <Row>
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+    </Row>
+    <Row>
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+      <Block r="0" g="0" b="0" />
+    </Row>
+  </ObjectiveField>
+  <Ribbons count="0" />
+</Stage>
