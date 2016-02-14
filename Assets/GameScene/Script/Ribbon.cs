@@ -1,20 +1,18 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEditor;
+﻿using System.Collections;
 using System.Xml.Serialization;
+using UnityEngine;
 
 
 public class Ribbon : MonoBehaviour, IXmlSerializable
 {
-	private Color _color;
-	public Color color { get { return _color; } private set { _color = value; } }
-	public int width { get; private set; }
+	public Color color { get; set; }
+	public int width { get; set; }
 	public enum RibbonType {
 		Additive, // 가산혼합
 		Subtractive, // 감산혼합
         Covering
 	};
-	public RibbonType type { get; private set; }
+	public RibbonType type { get; set; }
 
 	public Ribbon(Color color, int width, RibbonType ribbonType)
 	{
@@ -44,18 +42,6 @@ public class Ribbon : MonoBehaviour, IXmlSerializable
 	public void Update()
 	{
 		GetComponent<Renderer>().material.color = color;
-	}
-
-	[CustomEditor(typeof(Ribbon))]
-	public class RibbonEditor : Editor
-	{
-		public override void OnInspectorGUI()
-		{
-			Ribbon ribbon = (Ribbon)target;
-
-			ribbon.color = EditorGUILayout.ColorField("Color", ribbon.color);
-			ribbon.width = EditorGUILayout.IntField("Width", ribbon.width);
-		}
 	}
 
 	#region IXmlSerializable implementation

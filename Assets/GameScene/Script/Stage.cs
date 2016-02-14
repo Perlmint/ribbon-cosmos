@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using UnityEditor;
 
 public class Stage : MonoBehaviour, IXmlSerializable
 {
@@ -110,22 +109,4 @@ public class Stage : MonoBehaviour, IXmlSerializable
 	}
 
 	#endregion
-
-	[CustomEditor(typeof(Stage))]
-	public class StageEditor : Editor
-	{
-		public override void OnInspectorGUI()
-		{
-			Stage stage = (Stage)target;
-
-			stage.size = EditorGUILayout.IntField("Size", stage.size);
-			EditorGUILayout.LabelField("Ribbons");
-			if (GUILayout.Button("Add"))
-			{
-				stage.AddRibbon();
-			}
-			EditorGUILayout.BeginVertical();
-			EditorGUILayout.EndVertical();
-		}
-	}
 }
