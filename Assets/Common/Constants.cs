@@ -5,4 +5,5 @@ public static class Constants
 {
 	public const string LogoSceneName = "LogoScene";
 	public const string GameSceneName = "GameScene";
+	public const string StageSelectSceneName = "StageSelectSceneName";
 }
