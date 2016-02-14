@@ -7,6 +7,6 @@ public class LogoSceneManager : MonoBehaviour
 
 	public void AnimationEnded()
 	{
-		Application.LoadLevel(Constants.GameSceneName);
+		Application.LoadLevel(Constants.StageSelectSceneName);
 	}
 }
