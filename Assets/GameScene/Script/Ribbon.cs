@@ -11,7 +11,8 @@ public class Ribbon : MonoBehaviour, IXmlSerializable
 	public int width { get; private set; }
 	public enum RibbonType {
 		Additive, // 가산혼합
-		Subtractive // 감산혼합
+		Subtractive, // 감산혼합
+        Covering
 	};
 	public RibbonType type { get; private set; }
 
@@ -25,13 +26,18 @@ public class Ribbon : MonoBehaviour, IXmlSerializable
 	public void ApplyColor(ref Color color)
 	{
 		switch (type) {
-		case RibbonType.Additive:
-			color.r += this.color.r;
-			color.g += this.color.g;
-			color.b += this.color.b;
-			break;
-		case RibbonType.Subtractive:
-			break;
+		    case RibbonType.Additive:
+		    	color.r += this.color.r;
+		    	color.g += this.color.g;
+		    	color.b += this.color.b;
+		    	break;
+		    case RibbonType.Subtractive:
+		    	break;
+            case RibbonType.Covering:
+                color.r = this.color.r;
+                color.g = this.color.g;
+                color.b = this.color.b;
+                break;        
 		}
 	}
 

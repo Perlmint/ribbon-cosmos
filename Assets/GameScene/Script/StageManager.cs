@@ -74,6 +74,8 @@ public class StageManager : MonoBehaviour
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.A))
 			Temp ();
+        if (Input.GetKeyDown(KeyCode.S))
+            tempCover();
 	}
 
 	void Temp(){
@@ -82,4 +84,12 @@ public class StageManager : MonoBehaviour
 
 		stage.ApplyRibbon(Field.Direction.Horizontal, 1, temp);
 	}
+
+    void tempCover()
+    {
+        Ribbon tempCover;
+        tempCover = new Ribbon(Color.blue, 1, Ribbon.RibbonType.Covering);
+
+        stage.ApplyRibbon(Field.Direction.Vertical, 1, tempCover);
+    }
 }
