@@ -20,7 +20,7 @@ public static class StageUtils
 		if (stage != null)
 		{
 			var path = EditorUtility.SaveFilePanel("Save stage as xml",
-				            "Assets/stages",
+				            "Assets/GameData",
 				            "stage.xml",
 				            "xml");
 			if (path.Length != 0)
