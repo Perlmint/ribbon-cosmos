@@ -1,3 +1,4 @@
+using Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,18 +63,29 @@ public class StageManager : MonoBehaviour
 
 		if (StageData == null)
 		{
-			stage.Size = size;
-		}
-		else
-		{
-			string data = StageData.text;
-			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+			var levelManager = GameObject.FindObjectOfType<StageLevelManager>();
+			if (levelManager != null)
 			{
-				using (var reader = new XmlTextReader(stream))
-				{
-					reader.ReadToFollowing("Stage");
-					stage.ReadXml(reader);
-				}
+				StageData = levelManager.NextLevel;
+			}
+		}
+		if (StageData == null)
+		{
+			#if UNITY_EDITOR
+			stage.Size = size;
+			return;
+			#else
+			throw new InvalidDataException("Next stage is not specified");
+			#endif
+		}
+
+		string data = StageData.text;
+		using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+		{
+			using (var reader = new XmlTextReader(stream))
+			{
+				reader.ReadToFollowing("Stage");
+				stage.ReadXml(reader);
 			}
 		}
 	}
