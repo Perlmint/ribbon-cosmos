@@ -6,6 +6,7 @@ using System.IO;
 using System.Xml;
 using System.Text;
 
+#if UNITY_EDITOR
 public static class StageUtils
 {
 	[MenuItem("Stage/Save")]
@@ -50,4 +51,4 @@ public static class StageUtils
 		}
 	}
 }
-
+#endif
