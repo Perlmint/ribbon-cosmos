@@ -1,9 +1,11 @@
-using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using System.Text;
+using System.Xml;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
@@ -31,18 +33,23 @@ public class StageManager : MonoBehaviour
 	public GameObject UiBottom;
 
 	private List<GameObject> ribbons = new List<GameObject>();
+	private Ribbon selectedRibbon = null;
 
 	public Ribbon newRibbon()
 	{
-		var height = UiBottom.transform.GetComponent<RectTransform>().rect.size.y;
+		var viewSize = UiBottom.transform.GetComponent<RectTransform>().rect.size;
+		var height = viewSize.y;
+		var viewWidth = viewSize.x;
 		var width = ribbonProto.GetComponent<Renderer>().bounds.size.x;
 		GameObject ribbonObject = 
 			Instantiate(ribbonProto,
 				new Vector3(ribbons.Count * 270 + width / 2 + 20, height / 2, 0),
 				UiBottom.transform.rotation) as GameObject;
 
-		ribbonObject.transform.parent = UiBottom.transform;
+		RectTransform contentTransform = (RectTransform)UiBottom.GetComponent<ScrollRect>().content;
+		ribbonObject.transform.parent = contentTransform;
 		ribbons.Add(ribbonObject);
+		contentTransform.sizeDelta = new Vector2(Math.Max(viewWidth, ribbonObject.transform.localPosition.x + width), 0);
 
 		return ribbonObject.GetComponent<Ribbon>();
 	}
@@ -71,25 +78,100 @@ public class StageManager : MonoBehaviour
 		}
 	}
 
+	private Vector3 beginPosition;
+	private Vector3 endPosition;
+
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.A))
-			Temp ();
-        if (Input.GetKeyDown(KeyCode.S))
-            tempCover();
+		bool checkInput = false;
+		if (Input.GetMouseButtonDown(0))
+		{
+			checkInput = true;
+			beginPosition = Input.mousePosition;
+		}
+		else if (Input.GetMouseButtonUp(0))
+		{
+			checkInput = true;
+			endPosition = Input.mousePosition;
+		}
+		else if (Input.GetMouseButton(0))
+		{
+		}
+
+		if (!checkInput)
+		{
+			return;
+		}
+
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hitInfo;
+		if (Field.GetComponent<Collider>().Raycast(ray, out hitInfo, float.PositiveInfinity))
+		{
+			ProcessFieldInput(ray);
+		}
+		else if (Input.GetMouseButtonUp(0))
+		{
+			if ((endPosition - beginPosition).magnitude > 50)
+			{
+				// ignore too much moved
+				return;
+			}
+			foreach(var ribbon in ribbons)
+			{
+				if (ribbon.GetComponent<Collider>().Raycast(ray, out hitInfo, float.PositiveInfinity))
+				{
+					selectedRibbon = ribbon.GetComponent<Ribbon>();
+					return;
+				}
+			}
+		}
 	}
 
-	void Temp(){
-		Ribbon temp;
-		temp = new Ribbon(Color.red, 1, Ribbon.RibbonType.Additive);
+	void ProcessFieldInput(Ray ray)
+	{
+		if (selectedRibbon == null)
+		{
+			return;
+		}
 
-		stage.ApplyRibbon(Field.Direction.Horizontal, 1, temp);
+		Vector2 touched = Field.InputTest(ray);
+		if (touched.x == float.NaN)
+		{
+			return;
+		}
+
+		if (Input.GetMouseButtonDown(0))
+		{
+			beginPosition = touched;
+		}
+		else if (Input.GetMouseButtonUp(0))
+		{
+			endPosition = touched;
+			int index = 0;
+			Field.Direction direction = Field.Direction.Horizontal;
+			if (beginPosition.y == endPosition.y)
+			{
+				if (Math.Abs(beginPosition.x - endPosition.x) != Field.Size - 1)
+				{
+					return;
+				}
+				direction = Field.Direction.Horizontal;
+				index = (int)beginPosition.y;
+			}
+			else if (beginPosition.x == endPosition.x)
+			{
+				if (Math.Abs(beginPosition.y - endPosition.y) != Field.Size - 1)
+				{
+					return;
+				}
+				direction = Field.Direction.Vertical;
+				index = (int)beginPosition.x;
+			}
+			else
+			{
+				return;
+			}
+
+			stage.ApplyRibbon(direction, index, selectedRibbon);
+		}
 	}
-
-    void tempCover()
-    {
-        Ribbon tempCover;
-        tempCover = new Ribbon(Color.blue, 1, Ribbon.RibbonType.Covering);
-
-        stage.ApplyRibbon(Field.Direction.Vertical, 1, tempCover);
-    }
 }
