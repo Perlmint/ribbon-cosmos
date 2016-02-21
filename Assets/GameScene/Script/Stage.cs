@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 public class Stage : MonoBehaviour, IXmlSerializable
 {
 	public Field field;
-	public Color[] objectiveColors;
+	public Field objective;
 	private List<Ribbon> ribbons = new List<Ribbon>();
 	public int size;
 
@@ -14,11 +14,13 @@ public class Stage : MonoBehaviour, IXmlSerializable
 		get { return size; }
 		set {
 			size = value;
-			field.Size = size;
-			objectiveColors = new Color[size * size];
-			for (int i = size * size; i > 0; i--)
+			if (field != null)
 			{
-				objectiveColors[i - 1] = new Color();
+				field.Size = size;
+			}
+			if (objective != null)
+			{
+				objective.Size = size;
 			}
 		}
 	}
@@ -26,6 +28,9 @@ public class Stage : MonoBehaviour, IXmlSerializable
 	public void Start()
 	{
 		field = StageManager.Current.Field;
+		objective = StageManager.Current.Preview;
+		field.Size = size;
+		objective.Size = size;
 	}
 
 	public void ApplyRibbon(Field.Direction direction, int pos, Ribbon ribbon)
@@ -53,18 +58,7 @@ public class Stage : MonoBehaviour, IXmlSerializable
 		reader.ReadToFollowing("BaseField");
 		field.ReadXml(reader);
 		reader.ReadToFollowing("ObjectiveField");
-		for (int x = 0; x < size; x++)
-		{
-			reader.ReadToFollowing("Row");
-			for (int y = 0; y < size; y++)
-			{
-				reader.ReadToFollowing("Block");
-				objectiveColors[y * size + x] = new Color(
-					float.Parse(reader.GetAttribute("r")),
-					float.Parse(reader.GetAttribute("g")),
-					float.Parse(reader.GetAttribute("b")));
-			}
-		}
+		objective.ReadXml(reader);
 		reader.ReadToFollowing("Ribbons");
 		int ribbonCount = int.Parse(reader.GetAttribute("count"));
 		for (int i = 0; i < ribbonCount; i++)
@@ -82,20 +76,7 @@ public class Stage : MonoBehaviour, IXmlSerializable
 		field.WriteXml(writer);
 		writer.WriteEndElement();
 		writer.WriteStartElement("ObjectiveField");
-		for (int x = 0; x < size; x++)
-		{
-			writer.WriteStartElement("Row");
-			for (int y = 0; y < size; y++)
-			{
-				writer.WriteStartElement("Block");
-				var color = objectiveColors[y * size + x];
-				writer.WriteAttributeString("r", color.r.ToString());
-				writer.WriteAttributeString("g", color.g.ToString());
-				writer.WriteAttributeString("b", color.b.ToString());
-				writer.WriteEndElement();
-			}
-			writer.WriteEndElement();
-		}
+		objective.WriteXml(writer);
 		writer.WriteEndElement();
 		writer.WriteStartElement("Ribbons");
 		writer.WriteAttributeString("count", ribbons.Count.ToString());

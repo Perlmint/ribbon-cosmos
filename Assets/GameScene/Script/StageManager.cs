@@ -23,6 +23,7 @@ public class StageManager : MonoBehaviour
 		}
 	}
 	public Field Field;
+	public Field Preview;
 	public Stage stage;
 	public int size;
 	public float padding;
@@ -58,6 +59,7 @@ public class StageManager : MonoBehaviour
 		stage = GameObject.FindObjectOfType<Stage>();
 		UiTop = GameObject.Find("Top");
 		UiBottom = GameObject.Find("Bottom");
+		Debug.Log(Preview);
 
 		if (StageData == null)
 		{
