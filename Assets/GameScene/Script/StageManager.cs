@@ -31,6 +31,7 @@ public class StageManager : MonoBehaviour
 	public GameObject UiBottom;
 
 	private List<GameObject> ribbons = new List<GameObject>();
+	private Ribbon selectedRibbon = null;
 
 	public Ribbon newRibbon()
 	{
@@ -71,6 +72,47 @@ public class StageManager : MonoBehaviour
 		}
 	}
 
+	private Vector3 beginPosition;
+	private Vector3 endPosition;
+
 	void Update () {
+		bool checkInput = false;
+		if (Input.GetMouseButtonDown(0))
+		{
+			checkInput = true;
+			beginPosition = Input.mousePosition;
+		}
+		else if (Input.GetMouseButtonUp(0))
+		{
+			checkInput = true;
+			endPosition = Input.mousePosition;
+		}
+		else if (Input.GetMouseButton(0))
+		{
+		}
+
+		if (!checkInput)
+		{
+			return;
+		}
+
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hitInfo;
+		if (Input.GetMouseButtonUp(0))
+		{
+			if ((endPosition - beginPosition).magnitude > 50)
+			{
+				// ignore too much moved
+				return;
+			}
+			foreach(var ribbon in ribbons)
+			{
+				if (ribbon.GetComponent<Collider>().Raycast(ray, out hitInfo, float.PositiveInfinity))
+				{
+					selectedRibbon = ribbon.GetComponent<Ribbon>();
+					return;
+				}
+			}
+		}
 	}
 }
