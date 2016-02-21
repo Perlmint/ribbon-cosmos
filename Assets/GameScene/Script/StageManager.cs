@@ -1,9 +1,11 @@
-using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using System.Text;
+using System.Xml;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
@@ -98,7 +100,11 @@ public class StageManager : MonoBehaviour
 
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hitInfo;
-		if (Input.GetMouseButtonUp(0))
+		if (Field.GetComponent<Collider>().Raycast(ray, out hitInfo, float.PositiveInfinity))
+		{
+			ProcessFieldInput(ray);
+		}
+		else if (Input.GetMouseButtonUp(0))
 		{
 			if ((endPosition - beginPosition).magnitude > 50)
 			{
@@ -113,6 +119,55 @@ public class StageManager : MonoBehaviour
 					return;
 				}
 			}
+		}
+	}
+
+	void ProcessFieldInput(Ray ray)
+	{
+		if (selectedRibbon == null)
+		{
+			return;
+		}
+
+		Vector2 touched = Field.InputTest(ray);
+		if (touched.x == float.NaN)
+		{
+			return;
+		}
+
+		if (Input.GetMouseButtonDown(0))
+		{
+			beginPosition = touched;
+		}
+		else if (Input.GetMouseButtonUp(0))
+		{
+			endPosition = touched;
+			int index = 0;
+			Field.Direction direction = Field.Direction.Horizontal;
+			if (beginPosition.y == endPosition.y)
+			{
+				if (Math.Abs(beginPosition.x - endPosition.x) != Field.Size - 1)
+				{
+					return;
+				}
+				direction = Field.Direction.Horizontal;
+				index = (int)beginPosition.y;
+			}
+			else if (beginPosition.x == endPosition.x)
+			{
+				if (Math.Abs(beginPosition.y - endPosition.y) != Field.Size - 1)
+				{
+					return;
+				}
+				direction = Field.Direction.Vertical;
+				index = (int)beginPosition.x;
+			}
+			else
+			{
+				return;
+			}
+
+			stage.ApplyRibbon(direction, index, selectedRibbon);
 		}
 	}
 }

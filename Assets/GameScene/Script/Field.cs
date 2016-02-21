@@ -70,6 +70,22 @@ public class Field : MonoBehaviour, IXmlSerializable
 		return World[y * Size + x];
 	}
 
+	public Vector2 InputTest(Ray ray)
+	{
+		for (int i = 0; i < Size; i++)
+		{
+			for (int j = 0; j < Size; j++)
+			{
+				RaycastHit hit;
+				if (block(i, j).GetComponent<Collider>().Raycast(ray, out hit, float.PositiveInfinity))
+				{
+					return new Vector2(i, j);
+				}
+			}
+		}
+		return new Vector2(float.NaN, float.NaN);
+	}
+
 	public void setBlock(int x, int y, Block block)
 	{
 		World[y * Size + x] = block;
