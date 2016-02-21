@@ -6,10 +6,17 @@ using System.Text;
 using Common;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Xml;
 
 public class StageSelectManager : MonoBehaviour
 {
-	public List<KeyValuePair<string, string>> StageList { get; set; }
+	public class StageInfo
+	{
+		public string Title { get; set; }
+		public string Path { get; set; }
+		public TextAsset Data { get; set; }
+	}
+	public List<StageInfo> StageList { get; set; }
 	public GameObject StageButtonProto;
 	private StageLevelManager levelManager;
 	public GameObject ButtonsWrap;
@@ -17,7 +24,7 @@ public class StageSelectManager : MonoBehaviour
 
 	public StageSelectManager()
 	{
-		StageList = new List<KeyValuePair<string, string>>();
+		StageList = new List<StageInfo>();
 	}
 
 	void Start () {
@@ -35,7 +42,11 @@ public class StageSelectManager : MonoBehaviour
 				{
 					// format: "<path> <title>"
 					var kv = line.Split(new char[]{ ' ' }, 2);
-					StageList.Add(new KeyValuePair<string, string>(kv[0], kv[1]));
+					StageList.Add(new StageInfo {
+						Title = kv[1],
+						Path = kv[0],
+						Data = Resources.Load<TextAsset>(kv[0]),
+					});
 				}
 			}
 		}
@@ -53,6 +64,16 @@ public class StageSelectManager : MonoBehaviour
 		{
 			var newButton = Instantiate(StageButtonProto);
 			newButton.transform.SetParent(ButtonsWrap.transform);
+			Field field = newButton.GetComponentInChildren<Field>();
+			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(stage.Data.text)))
+			{
+				using (var reader = new XmlTextReader(stream))
+				{
+					reader.ReadToFollowing("Stage");
+					reader.ReadToDescendant("ObjectiveField");
+					field.ReadXml(reader);
+				}
+			}
 			var rectTransform = (RectTransform)newButton.transform;
 			if (width == 0 && height == 0)
 			{
@@ -89,7 +110,7 @@ public class StageSelectManager : MonoBehaviour
 			}
 			index++;
 			var title = newButton.transform.Find("Title").GetComponent<Text>();
-			title.text = stage.Value;
+			title.text = stage.Title;
 			newButton.GetComponent<Button>().onClick.AddListener(this.StageButtonClicked);
 		}
 	}
@@ -103,7 +124,7 @@ public class StageSelectManager : MonoBehaviour
 	{
 		Debug.Log("clicked");
 		GameObject clickedButton = EventSystem.current.currentSelectedGameObject;
-		levelManager.NextLevel = Resources.Load<TextAsset>(StageList[int.Parse(clickedButton. name)].Key);
+		levelManager.NextLevel = StageList[int.Parse(clickedButton. name)].Data;
 		DontDestroyOnLoad(levelManager);
 		Application.LoadLevel(Constants.GameSceneName);
 	}

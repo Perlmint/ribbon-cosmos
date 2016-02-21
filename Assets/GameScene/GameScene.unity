@@ -273,6 +273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c805d56cc82784599a0f2247995efc93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blockProto: {fileID: 195442, guid: 5665c41d744f88047b4189986e153841, type: 2}
+  Padding: 0.1
 --- !u!1 &123035338
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,6 +599,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c805d56cc82784599a0f2247995efc93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blockProto: {fileID: 195442, guid: 5665c41d744f88047b4189986e153841, type: 2}
+  Padding: 0.2
 --- !u!23 &477075559
 MeshRenderer:
   m_ObjectHideFlags: 0

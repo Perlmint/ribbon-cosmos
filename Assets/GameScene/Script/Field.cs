@@ -5,12 +5,8 @@ using System.Collections.Generic;
 
 public class Field : MonoBehaviour, IXmlSerializable
 {
-	private GameObject _blockProto;
-	private GameObject blockProto {
-		get {
-			return _blockProto ?? (_blockProto = StageManager.Current.blockProto);
-		}
-	}
+	public GameObject blockProto;
+	public float Padding;
 	private int size;
 
 	public int Size { 
@@ -38,7 +34,7 @@ public class Field : MonoBehaviour, IXmlSerializable
 			var fieldSize = fieldBound.size;
 			var fieldCenter = fieldBound.center;
 			var blockSize = blockProto.GetComponent<Renderer>().bounds.size;
-			float padding = 1.0f - StageManager.Current.padding;
+			float padding = 1.0f - Padding;
 			// 어차피 transform.parent를 지정하면 local좌표계가 parent에 상대적인 좌표계가 된다.
 			// 그러니 그냥 0.0f ~ 1.0f을 기준으로 위치 및 스케일을 구하면 된다.
 			Vector3 blockScale = new Vector3(1.0f / size * padding, 1.0f / size * padding, 1.0f);

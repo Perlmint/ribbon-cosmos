@@ -10,7 +10,6 @@ using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
-	public GameObject blockProto;
 	public GameObject ribbonProto;
 	private static StageManager _manager;
 	public static StageManager Current {
@@ -27,7 +26,6 @@ public class StageManager : MonoBehaviour
 	public Field Preview;
 	public Stage stage;
 	public int size;
-	public float padding;
 
 	public TextAsset StageData;
 
