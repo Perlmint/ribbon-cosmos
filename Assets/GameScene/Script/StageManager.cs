@@ -23,6 +23,7 @@ public class StageManager : MonoBehaviour
 		}
 	}
 	public Field Field;
+	public Field Preview;
 	public Stage stage;
 	public int size;
 	public float padding;
@@ -71,7 +72,6 @@ public class StageManager : MonoBehaviour
 				using (var reader = new XmlTextReader(stream))
 				{
 					reader.ReadToFollowing("Stage");
-					Debug.Log(reader.Name);
 					stage.ReadXml(reader);
 				}
 			}
