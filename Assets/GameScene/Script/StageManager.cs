@@ -59,7 +59,6 @@ public class StageManager : MonoBehaviour
 		stage = GameObject.FindObjectOfType<Stage>();
 		UiTop = GameObject.Find("Top");
 		UiBottom = GameObject.Find("Bottom");
-		Debug.Log(Preview);
 
 		if (StageData == null)
 		{
@@ -73,7 +72,6 @@ public class StageManager : MonoBehaviour
 				using (var reader = new XmlTextReader(stream))
 				{
 					reader.ReadToFollowing("Stage");
-					Debug.Log(reader.Name);
 					stage.ReadXml(reader);
 				}
 			}
