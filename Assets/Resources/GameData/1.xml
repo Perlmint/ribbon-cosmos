@@ -17,7 +17,7 @@
       <Block r="0" g="0" b="0" />
     </Row>
   </BaseField>
-  <ObjectiveField>
+  <ObjectiveField Size="3">
     <Row>
       <Block r="0" g="0" b="0" />
       <Block r="0" g="0" b="0" />
