@@ -88,6 +88,7 @@ public class StageManager : MonoBehaviour
 		}
 	}
 
+<<<<<<< HEAD
 	private Vector3 beginPosition;
 	private Vector3 endPosition;
 
@@ -106,6 +107,21 @@ public class StageManager : MonoBehaviour
 		else if (Input.GetMouseButton(0))
 		{
 		}
+=======
+    
+	void Update () {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Temp();
+            //Debug.Log("A");
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            TempCover();
+            //Debug.Log("S");
+        }
+	}
+>>>>>>> dev_mobile_touch
 
 		if (!checkInput)
 		{
@@ -136,6 +152,7 @@ public class StageManager : MonoBehaviour
 		}
 	}
 
+<<<<<<< HEAD
 	void ProcessFieldInput(Ray ray)
 	{
 		if (selectedRibbon == null)
@@ -148,6 +165,12 @@ public class StageManager : MonoBehaviour
 		{
 			return;
 		}
+=======
+    void TempCover()
+    {
+        Ribbon tempCover;
+        tempCover = new Ribbon(Color.blue, 1, Ribbon.RibbonType.Covering);
+>>>>>>> dev_mobile_touch
 
 		if (Input.GetMouseButtonDown(0))
 		{

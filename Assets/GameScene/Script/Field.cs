@@ -48,7 +48,11 @@ public class Field : MonoBehaviour, IXmlSerializable
 					curBlock.transform.parent = this.transform;
 					var position = new Vector3(x - ((size - 1) / 2), y - ((size - 1) / 2), -1);
 					position.Scale(blockPositionUnit);
-					curBlock.transform.localPosition = position;
+
+                    curBlock.GetComponent<Block>().x = x;
+                    curBlock.GetComponent<Block>().y = y;
+
+                    curBlock.transform.localPosition = position;
 					curBlock.transform.localScale = blockScale;
 					setBlock(x, y, curBlock.GetComponent<Block>());
 					blockObjs.Add(curBlock);
@@ -95,7 +99,7 @@ public class Field : MonoBehaviour, IXmlSerializable
 
 	private delegate Block getter_type(int pos);
 
-	public void ApplyRibbon(Direction direction, int pos, Ribbon ribbon)
+    public void ApplyRibbon(Direction direction, int pos, Ribbon ribbon)
 	{
 		getter_type getter;
 		if (direction == Direction.Horizontal)
@@ -121,12 +125,11 @@ public class Field : MonoBehaviour, IXmlSerializable
 	{
 		// init world;
 		Size = size;
-	}
+    }
 
-	#region IXmlSerializable implementation
+    #region IXmlSerializable implementation
 
-
-	public System.Xml.Schema.XmlSchema GetSchema()
+    public System.Xml.Schema.XmlSchema GetSchema()
 	{
 		return null;
 	}
