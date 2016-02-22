@@ -52,7 +52,11 @@ public class Field : MonoBehaviour, IXmlSerializable
 					curBlock.transform.parent = this.transform;
 					var position = new Vector3(x - ((size - 1) / 2), y - ((size - 1) / 2), -1);
 					position.Scale(blockPositionUnit);
-					curBlock.transform.localPosition = position;
+
+                    curBlock.GetComponent<Block>().x = x;
+                    curBlock.GetComponent<Block>().y = y;
+
+                    curBlock.transform.localPosition = position;
 					curBlock.transform.localScale = blockScale;
 					setBlock(x, y, curBlock.GetComponent<Block>());
 					blockObjs.Add(curBlock);
@@ -64,8 +68,6 @@ public class Field : MonoBehaviour, IXmlSerializable
 	private List<GameObject> blockObjs = new List<GameObject>();
 
 	private Block[] World { get; set; }
-
-    public float xMouseDown, yMouseDown, xMouseUp, yMouseUp;
 
 	public Block block(int x, int y)
 	{
@@ -107,71 +109,13 @@ public class Field : MonoBehaviour, IXmlSerializable
 		}
 	}
 
-    // 임시 테스트용
-    Ribbon temp;
-
-    // block들의 collider를 꺼서 Field애 대한 클릭을 인식하게 함
-    void CheckInputToApply(float x1, float y1, float x2, float y2)
-    {
-        float stdLength = 225.0f / size;
-
-        x1 -= 340;
-        x2 -= 340;
-        y1 -= 105;
-        y2 -= 105;
-
-        int _x1 = (int)(x1 / stdLength);
-        int _x2 = (int)(x2 / stdLength);
-        int _y1 = (int)(y1 / stdLength);
-        int _y2 = (int)(y2 / stdLength);
-
-        if(_y1 < 0 || _y1 >= size || _y2 < 0 || _y2 >= size)
-        {
-            return;
-            
-        }
-        else if (_x1 == _x2 && _y1 != _y2)
-        {
-            ApplyRibbon(Direction.Vertical, _x1, temp);
-        }
-        else if(_x1 != _x2 && _y1 == _y2)
-        {
-            ApplyRibbon(Direction.Horizontal, _y1, temp);
-        }
-        else
-        {
-            return;
-        }
-
-        Debug.Log("x1 x2 y1 y2 " + _x1 + " " + _x2 + " " + _y1 + " " + _y2);
-
-    }
-
 	void Start()
 	{
 		// init world;
 		Size = size;
-
-        // 임시 테스트용 리본, 후에 삭제
-        temp = new Ribbon(Color.red, 1, Ribbon.RibbonType.Covering);
-    }
-
-    void OnMouseDown()
-    {
-        xMouseDown = Input.mousePosition.x;
-        yMouseDown = Input.mousePosition.y;
-    }
-
-    void OnMouseUp()
-    {
-        xMouseUp = Input.mousePosition.x;
-        yMouseUp = Input.mousePosition.y;
-
-        CheckInputToApply(xMouseDown, yMouseDown, xMouseUp, yMouseUp);
     }
 
     #region IXmlSerializable implementation
-
 
     public System.Xml.Schema.XmlSchema GetSchema()
 	{
